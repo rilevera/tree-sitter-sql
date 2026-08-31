@@ -27,7 +27,7 @@ clean: parser-clean ## Remove parser compilation artifacts
 
 parser-generate: $(PARSER) ## Regenerate grammar and parser sources
 
-test: install parser-generate ## Regenerate the parser and run grammar tests
+test: install ## Run grammar tests against the currently generated parser
 	$(TS) test
 
 parser-build: install ts-version parser-clean parser-generate test $(WASM) ## Generate, test, and build the WASM artifact
