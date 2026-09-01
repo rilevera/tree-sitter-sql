@@ -1,75 +1,68 @@
 # tree-sitter-sql
 
-[![Build/test](https://github.com/derekstride/tree-sitter-sql/actions/workflows/ci.yml/badge.svg)](https://github.com/derekstride/tree-sitter-sql/actions/workflows/ci.yml)
-[![GitHub Pages](https://github.com/DerekStride/tree-sitter-sql/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/DerekStride/tree-sitter-sql/actions/workflows/gh-pages.yml)
-[![npm package version](https://img.shields.io/npm/v/%40derekstride/tree-sitter-sql?logo=npm&color=brightgreen)](https://www.npmjs.com/package/@derekstride/tree-sitter-sql)
+[![CI](https://github.com/rilevera/tree-sitter-sql/actions/workflows/ci.yml/badge.svg)](https://github.com/rilevera/tree-sitter-sql/actions/workflows/ci.yml)
 
-
-A general/permissive SQL grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter).
+A general/permissive SQL grammar for [tree-sitter](https://github.com/tree-sitter/tree-sitter),
+distributed as a prebuilt WebAssembly (WASM) module.
 
 ## Installation
 
-**We don't commit the generated parser files to the `main` branch.** Instead, you can find them on the
-[gh-pages](https://github.com/DerekStride/tree-sitter-sql/tree/gh-pages) branch. We're open to feedback & encourage you
-to [open an issue](https://github.com/DerekStride/tree-sitter-sql/issues/new) to discuss any problems.
+The package is published to GitHub Packages as `@rilevera/tree-sitter-sql`. Configure your
+package manager to use the GitHub Packages registry for the `@rilevera` scope, then install it:
 
-They are also hosted on the [GitHub pages site](https://derek.stride.host/tree-sitter-sql/) and available for download
-here:
-[github://derekstride/tree-sitter-sql/gh-pages.tar.gz](https://github.com/DerekStride/tree-sitter-sql/archive/refs/heads/gh-pages.tar.gz).
-
-*Plugin maintainers ensure to specify the `HEAD` (or a specific revision) of the `gh-pages` branch when integrating
-with this project.*
-
-### Step 1: Download the parser files
-
-**Using `git`**
 ```bash
-git clone https://github.com/DerekStride/tree-sitter-sql.git
-cd tree-sitter-sql
-git checkout gh-pages
+# .npmrc
+@rilevera:registry=https://npm.pkg.github.com
+
+npm install @rilevera/tree-sitter-sql
 ```
 
-**Using `curl`**
-```bash
-curl -LO https://github.com/DerekStride/tree-sitter-sql/archive/refs/heads/gh-pages.tar.gz
-tar -xzf gh-pages.tar.gz
-cd tree-sitter-sql-gh-pages
-```
+## Usage
 
-### Step 2: Compile the Parser
+The package ships a single prebuilt `tree-sitter-sql.wasm` artifact. Load it with
+[web-tree-sitter](https://github.com/tree-sitter/tree-sitter/tree/master/lib/binding_web):
 
-Tree-sitter parsers need to be compiled as a shared-object / dynamic-library, you can enable this by passing the
-`-shared` & `-fPIC` flags to your compiler.
+```javascript
+import { Parser, Language } from "web-tree-sitter";
+import sqlWasm from "@rilevera/tree-sitter-sql";
 
-```bash
-cc -shared -fPIC -I./src src/parser.c src/scanner.c -o sql.so
-```
+await Parser.init();
+const SQL = await Language.load(sqlWasm);
 
-### Using [cargo](https://crates.io/crates/tree-sitter-sequel)
+const parser = new Parser();
+parser.setLanguage(SQL);
 
-```bash
-cargo add tree-sitter-sequel
-```
-
-### Using [npm](https://www.npmjs.com/package/@derekstride/tree-sitter-sql)
-
-```bash
-npm i @derekstride/tree-sitter-sql
-```
-
-### Using [pip](https://pypi.org/project/tree-sitter-sql/0.3.5/)
-
-```bash
-pip install tree-sitter-sql
+const tree = parser.parse("SELECT * FROM users WHERE id = 1;");
+console.log(tree.rootNode.toString());
 ```
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for documentation on how to set up the project for development.
+This project uses [Bun](https://bun.sh) and the [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter)
+to generate the parser, run the corpus tests, and build the WASM artifact.
+
+```bash
+make install   # validate Bun and install dependencies from the lockfile
+make test      # regenerate the parser and run the grammar tests
+make build     # generate, test, and build tree-sitter-sql.wasm
+```
+
+Run `make help` to see all available commands.
+
+### Releasing
+
+Bump the version (this keeps `package.json` and `tree-sitter.json` in sync):
+
+```bash
+make set-version VERSION=1.2.3   # or: make bump-minor / make bump-patch
+```
+
+Commit the change, then push a matching git tag. The `Publish package` workflow builds the WASM
+and publishes the package to GitHub Packages.
 
 ## Features
 
-For a complete list of features see the the [tests](test/corpus)
+For a complete list of features see the [tests](test/corpus).
 
 ## References
 
@@ -79,9 +72,3 @@ For a complete list of features see the the [tests](test/corpus)
 * [SQLite's railroad diagram for expr](https://www.sqlite.org/lang_expr.html) - Another reference diagram.
 * [Postgresql syntax documentation](https://www.postgresql.org/docs/current/sql-commands.html)
 * [Mariadb syntax documentation](https://mariadb.com/kb/en/sql-statements-structure/)
-
-### Other projects
-
-* https://github.com/m-novikov/tree-sitter-sql
-* https://github.com/tjdevries/tree-sitter-sql
-* https://github.com/dhcmrlchtdj/tree-sitter-sqlite

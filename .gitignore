@@ -1,66 +1,19 @@
-## Custom
-
-tmp/
-Cargo.lock
-node_modules
-.node-version
-build
-*.log
-/test.js
-/examples/npm
-package-lock.json
-/target/
-/.build/
-/src/tree_sitter/
-/src/parser.c
-/src/*.json
-
-## Generated Entries
-
-# Rust artifacts
-target/
-
-# Node artifacts
-build/
-prebuilds/
 node_modules/
 
-# Swift artifacts
-.build/
+# Generated parser sources (regenerated from grammar during build)
+/src/parser.c
+/src/*.json
+/src/tree_sitter/
 
-# Go artifacts
-_obj/
-
-# Python artifacts
-.venv/
-dist/
-*.egg-info
-*.whl
-
-# C artifacts
-*.a
-*.so
-*.so.*
-*.dylib
-*.dll
-*.pc
-*.exp
-*.lib
-
-# Zig artifacts
-.zig-cache/
-zig-cache/
-zig-out/
-
-# Example dirs
-/examples/*/
-
-# Grammar volatiles
-*.wasm
+# Tree-sitter build artifacts other than the committed WASM package
 *.obj
 *.o
 
-# Archives
+# Package archives
 *.tar.gz
 *.tgz
 *.zip
+
+# Scratch
+tmp/
+*.log

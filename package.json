@@ -1,66 +1,52 @@
 {
-  "name": "@derekstride/tree-sitter-sql",
-  "version": "0.3.11",
-  "description": "Tree-sitter Grammar for SQL",
-  "main": "bindings/node",
-  "types": "bindings/node",
-  "scripts": {
-    "install": "npx --yes --package=tree-sitter-cli@v0.26.3 -- tree-sitter generate && node-gyp-build",
-    "prestart": "npx --yes --package=tree-sitter-cli@v0.26.3 -- tree-sitter build --wasm",
-    "start": "npx --yes --package=tree-sitter-cli@v0.26.3 -- tree-sitter playground",
-    "release": "commit-and-tag-version",
-    "test": "node --test bindings/node/*_test.js",
-    "prebuildify": "prebuildify --napi --strip"
-  },
-  "author": "derek stride",
+  "name": "@rilevera/tree-sitter-sql",
+  "version": "1.0.0",
+  "packageManager": "bun@1.3.11",
+  "description": "SQL grammar for tree-sitter, distributed as WebAssembly",
   "license": "MIT",
-  "dependencies": {
-    "node-addon-api": "^7.1.0",
-    "node-gyp-build": "^4.8.0"
-  },
-  "devDependencies": {
-    "commit-and-tag-version": "^12.0.0",
-    "node-gyp": "^10.0.1",
-    "prebuildify": "^6.0.0"
-  },
-  "peerDependencies": {
-    "tree-sitter": "^0.25.0"
-  },
-  "peerDependenciesMeta": {
-    "tree_sitter": {
-      "optional": true
-    }
-  },
-  "gypfile": true,
-  "directories": {
-    "test": "test"
-  },
-  "type": "module",
+  "author": "derek stride",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/derekstride/tree-sitter-sql.git"
+    "url": "git+https://github.com/rilevera/tree-sitter-sql.git"
   },
-  "bugs": {
-    "url": "https://github.com/derekstride/tree-sitter-sql/issues"
-  },
-  "homepage": "https://github.com/derekstride/tree-sitter-sql#readme",
-  "commit-and-tag-version": {
-    "skip": {
-      "tag": true
+  "main": "./tree-sitter-sql.wasm",
+  "types": "./tree-sitter-sql.wasm.d.ts",
+  "exports": {
+    ".": {
+      "types": "./tree-sitter-sql.wasm.d.ts",
+      "default": "./tree-sitter-sql.wasm"
+    },
+    "./tree-sitter-sql.wasm": {
+      "types": "./tree-sitter-sql.wasm.d.ts",
+      "default": "./tree-sitter-sql.wasm"
     }
   },
-  "keywords": [
-    "parser",
-    "sql"
-  ],
   "files": [
-    "grammar.js",
-    "grammar/**",
-    "binding.gyp",
-    "prebuilds/**",
-    "bindings/node/*",
-    "queries/*",
-    "src/**",
-    "tree-sitter.json"
-  ]
+    "tree-sitter-sql.wasm",
+    "tree-sitter-sql.wasm.d.ts",
+    "LICENSE"
+  ],
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "sql",
+    "webassembly",
+    "wasm"
+  ],
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "bun": ">=1.3.6 <1.3.12"
+  },
+  "scripts": {
+    "check:bun": "bun run scripts/check-bun-version.ts",
+    "build": "make parser-build",
+    "test": "make test"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "0.26.11"
+  }
 }
