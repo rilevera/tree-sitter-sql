@@ -20,11 +20,10 @@ jobs:
         with:
           bun-version: 1.3.11
       - name: Set up GitHub Packages authentication
-        uses: actions/setup-node@v4
-        with:
-          registry-url: https://npm.pkg.github.com
-          scope: "@rilevera"
+        run: |
+          cat <<EOF > .npmrc
+          @rilevera:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+          EOF
       - name: Build, test, and publish package
         run: make publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
