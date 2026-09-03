@@ -34,6 +34,7 @@ export default grammar({
 
   precedences: $ => [
     [
+      'json_access',
       'binary_is',
       'unary_not',
       'binary_exp',
