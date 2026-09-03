@@ -1,4 +1,8 @@
-SELECT MAX(m.id) max
+SELECT MAX(m.id) max,
+    m.data:foo:bar AS db,
+    m.data['foo'] AS db2,
+    m.data['foo'][0] AS db3,
+    m.data:foo.bar AS db4
 -- <- keyword
     -- ^ function.call
         -- ^ type
