@@ -1,13 +1,28 @@
 SELECT MAX(m.id) max,
-    m.data:foo:bar AS db,
-    m.data['foo'] AS db2,
-    m.data['foo'][0] AS db3,
-    m.data:foo.bar AS db4
 -- <- keyword
     -- ^ function.call
         -- ^ type
           -- ^ field
               -- ^ variable
+    m.data:foo:bar AS db,
+       -- ^ operator
+        -- ^ property
+           -- ^ operator
+            -- ^ property
+    m.data['foo'] AS db2,
+       -- ^ punctuation.bracket
+        -- ^ string
+             -- ^ punctuation.bracket
+    m.data['foo'][0] AS db3,
+       -- ^ punctuation.bracket
+             -- ^ punctuation.bracket
+              -- ^ punctuation.bracket
+                -- ^ punctuation.bracket
+    m.data:foo.bar AS db4
+       -- ^ operator
+        -- ^ property
+           -- ^ punctuation.delimiter
+            -- ^ property
 FROM my_table m
 -- <- keyword
   -- ^ type

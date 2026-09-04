@@ -30,19 +30,19 @@ export default {
     )
   ),
 
-    json_access_expression: $ => prec.left('json_access', seq(
-      field('operand', $._expression),
-      ':',
-      field('path', $.json_path),
-    )),
-    json_path: $ => seq(
-      $._json_path_element,
-      repeat(seq('.', $._json_path_element)),
-    ),
-    _json_path_element: $ => choice(
-      $.identifier,
-      $._literal_string,
-    ),
+  json_access_expression: $ => prec.left('json_access', seq(
+    field('operand', alias($._qualified_field, $.field)),
+    ':',
+    field('path', $.json_path),
+  )),
+  json_path: $ => prec.right(seq(
+    $._json_path_element,
+    repeat(seq(choice('.', ':'), $._json_path_element)),
+  )),
+  _json_path_element: $ => choice(
+    $.identifier,
+    $._literal_string,
+  ),
 
     object_reference: $ => choice(
       seq(
@@ -199,7 +199,14 @@ export default {
     seq(
       field('expression', $._expression),
       "[",
-      field('subscript', $._expression),
+      choice(
+        field('subscript', $._expression),
+        prec.dynamic(1, seq(
+          optional(field('lower', $._expression)),
+          ':',
+          optional(field('upper', $._expression)),
+        )),
+      ),
       "]",
     ),
   ),
