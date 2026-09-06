@@ -103,22 +103,6 @@ export default {
     $._function_return,
   ),
 
-  _tsql_function_body_statement: $ => seq(
-    optional($.keyword_as),
-    $.keyword_begin,
-    optional($.var_declarations),
-    choice(
-      repeat($.statement),
-      repeat1(seq(
-        $.keyword_begin,
-        repeat($.statement),
-        $.keyword_end,
-      )),
-    ),
-    $._function_return,
-    $.keyword_end,
-  ),
-
   function_body: $ => choice(
     seq(
       $._function_return,
@@ -171,10 +155,9 @@ export default {
       $.keyword_as,
       alias($._dollar_quoted_string_start_tag, $.dollar_quote),
       $._function_body_statement,
-      optional(';'),
+      ';',
       alias($._dollar_quoted_string_end_tag, $.dollar_quote),
     ),
-    $._tsql_function_body_statement,
   ),
 
   function_language: $ => seq(

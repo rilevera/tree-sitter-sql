@@ -78,26 +78,9 @@ export default {
       $.keyword_as,
       alias($._dollar_quoted_string_start_tag, $.dollar_quote),
       $._function_body_statement,
-      optional(';'),
+      ';',
       alias($._dollar_quoted_string_end_tag, $.dollar_quote),
     ),
-    // T-SQL style (no required RETURN)
-    $._tsql_procedure_body_statement,
-  ),
-
-  _tsql_procedure_body_statement: $ => seq(
-    optional($.keyword_as),
-    $.keyword_begin,
-    optional($.var_declarations),
-    choice(
-      repeat($.statement),
-      repeat1(seq(
-        $.keyword_begin,
-        repeat($.statement),
-        $.keyword_end,
-      )),
-    ),
-    $.keyword_end,
   ),
 
 };
