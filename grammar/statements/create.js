@@ -1,7 +1,7 @@
 import { comma_list, paren_list, wrapped_in_parenthesis } from "../helpers.js";
 
 import create_function_rules from "./create-function.js";
-import create_procedure_rules from "./create-procedure.js";
+// import create_procedure_rules from "./create-procedure.js";
 
 export default {
 
@@ -11,15 +11,16 @@ export default {
       $.create_view,
       $.create_materialized_view,
       $.create_index,
-      $.create_function,
-      $.create_procedure,
+      // create function, proc, trigger, and policy are uneeded for querying logs
+      // $.create_function,
+      // $.create_procedure,
       $.create_type,
       $.create_database,
       $.create_role,
       $.create_sequence,
       $.create_extension,
-      $.create_trigger,
-      $.create_policy,
+      // $.create_trigger,
+      // $.create_policy,
       prec.left(seq(
         $.create_schema,
         repeat($._create_statement),
@@ -348,8 +349,9 @@ export default {
     ),
   ),
 
+  // function_arguments from create_function_rules are used in other rules
   ...create_function_rules,
-  ...create_procedure_rules,
+  // ...create_procedure_rules,
 
   create_schema: $ => prec.left(seq(
     $.keyword_create,
@@ -471,67 +473,67 @@ export default {
     optional($.keyword_cascade),
   )),
 
-  create_trigger: $ => seq(
-    $.keyword_create,
-    optional($._or_replace),
-    // mariadb
-    optional(seq($.keyword_definer, '=', $.identifier)),
-    optional($.keyword_constraint),
-    // sqlite
-    optional($._temporary),
-    $.keyword_trigger,
-    // sqlite/mariadb
-    optional($._if_not_exists),
-    $.object_reference,
-    choice(
-      $.keyword_before,
-      $.keyword_after,
-      seq($.keyword_instead, $.keyword_of),
-    ),
-    $._create_trigger_event,
-    repeat(seq($.keyword_or, $._create_trigger_event)),
-    $.keyword_on,
-    $.object_reference,
-    repeat(
-      choice(
-        seq($.keyword_from, $.object_reference),
-        choice(
-          seq($.keyword_not, $.keyword_deferrable),
-          $.keyword_deferrable,
-          seq($.keyword_initially, $.keyword_immediate),
-          seq($.keyword_initially, $.keyword_deferred),
-        ),
-        seq($.keyword_referencing, choice($.keyword_old, $.keyword_new), $.keyword_table, optional($.keyword_as), $.identifier),
-        seq(
-          $.keyword_for,
-          optional($.keyword_each),
-          choice($.keyword_row, $.keyword_statement),
-          // mariadb
-          optional(seq(choice($.keyword_follows, $.keyword_precedes), $.identifier)),
-        ),
-        seq($.keyword_when, wrapped_in_parenthesis($._expression)),
-      ),
-    ),
-    $.keyword_execute,
-    choice($.keyword_function, $.keyword_procedure),
-    $.object_reference,
-    paren_list(field('parameter', $.term)),
-  ),
+  // create_trigger: $ => seq(
+  //   $.keyword_create,
+  //   optional($._or_replace),
+  //   // mariadb
+  //   optional(seq($.keyword_definer, '=', $.identifier)),
+  //   optional($.keyword_constraint),
+  //   // sqlite
+  //   optional($._temporary),
+  //   $.keyword_trigger,
+  //   // sqlite/mariadb
+  //   optional($._if_not_exists),
+  //   $.object_reference,
+  //   choice(
+  //     $.keyword_before,
+  //     $.keyword_after,
+  //     seq($.keyword_instead, $.keyword_of),
+  //   ),
+  //   $._create_trigger_event,
+  //   repeat(seq($.keyword_or, $._create_trigger_event)),
+  //   $.keyword_on,
+  //   $.object_reference,
+  //   repeat(
+  //     choice(
+  //       seq($.keyword_from, $.object_reference),
+  //       choice(
+  //         seq($.keyword_not, $.keyword_deferrable),
+  //         $.keyword_deferrable,
+  //         seq($.keyword_initially, $.keyword_immediate),
+  //         seq($.keyword_initially, $.keyword_deferred),
+  //       ),
+  //       seq($.keyword_referencing, choice($.keyword_old, $.keyword_new), $.keyword_table, optional($.keyword_as), $.identifier),
+  //       seq(
+  //         $.keyword_for,
+  //         optional($.keyword_each),
+  //         choice($.keyword_row, $.keyword_statement),
+  //         // mariadb
+  //         optional(seq(choice($.keyword_follows, $.keyword_precedes), $.identifier)),
+  //       ),
+  //       seq($.keyword_when, wrapped_in_parenthesis($._expression)),
+  //     ),
+  //   ),
+  //   $.keyword_execute,
+  //   choice($.keyword_function, $.keyword_procedure),
+  //   $.object_reference,
+  //   paren_list(field('parameter', $.term)),
+  // ),
 
-  _create_trigger_event: $ => choice(
-    $.keyword_insert,
-    seq(
-      $.keyword_update,
-      optional(
-        seq(
-          $.keyword_of,
-          comma_list($.identifier, true),
-        ),
-      ),
-    ),
-    $.keyword_delete,
-    $.keyword_truncate,
-  ),
+  // _create_trigger_event: $ => choice(
+  //   $.keyword_insert,
+  //   seq(
+  //     $.keyword_update,
+  //     optional(
+  //       seq(
+  //         $.keyword_of,
+  //         comma_list($.identifier, true),
+  //       ),
+  //     ),
+  //   ),
+  //   $.keyword_delete,
+  //   $.keyword_truncate,
+  // ),
 
   create_type: $ => prec.left(seq(
     $.keyword_create,
@@ -571,72 +573,72 @@ export default {
   ),
 
   // Postgres row level security
-  create_policy: $ => prec.right(
-    seq(
-      $.keyword_create,
-      $.keyword_policy,
-      $.object_reference,
-      $.keyword_on,
-      $.object_reference,
-      optional(
-        seq(
-          $.keyword_as,
-          choice(
-            $.keyword_permissive,
-            $.keyword_restrictive,
-          ),
-        ),
-      ),
-      optional(
-        seq(
-          $.keyword_for,
-          choice(
-            $.keyword_all,
-            $.keyword_select,
-            $.keyword_insert,
-            $.keyword_update,
-            $.keyword_delete,
-          ),
-        ),
-      ),
-      optional(
-        seq(
-          $.keyword_to,
-          choice(
-            $.object_reference,
-            $.keyword_public,
-            $.keyword_current_role,
-            $.keyword_current_user,
-            $.keyword_session_user,
-          ),
-          repeat(
-            seq(
-              ',',
-              choice(
-                $.object_reference,
-                $.keyword_public,
-                $.keyword_current_role,
-                $.keyword_current_user,
-                $.keyword_session_user,
-              ),
-            ),
-          ),
-        ),
-      ),
-      optional(
-        seq(
-          $.keyword_using,
-          $.parenthesized_expression,
-        ),
-      ),
-      optional(
-        seq(
-          $.keyword_with,
-          $.keyword_check,
-          $.parenthesized_expression,
-        ),
-      ),
-    ),
-  ),
+  // create_policy: $ => prec.right(
+  //   seq(
+  //     $.keyword_create,
+  //     $.keyword_policy,
+  //     $.object_reference,
+  //     $.keyword_on,
+  //     $.object_reference,
+  //     optional(
+  //       seq(
+  //         $.keyword_as,
+  //         choice(
+  //           $.keyword_permissive,
+  //           $.keyword_restrictive,
+  //         ),
+  //       ),
+  //     ),
+  //     optional(
+  //       seq(
+  //         $.keyword_for,
+  //         choice(
+  //           $.keyword_all,
+  //           $.keyword_select,
+  //           $.keyword_insert,
+  //           $.keyword_update,
+  //           $.keyword_delete,
+  //         ),
+  //       ),
+  //     ),
+  //     optional(
+  //       seq(
+  //         $.keyword_to,
+  //         choice(
+  //           $.object_reference,
+  //           $.keyword_public,
+  //           $.keyword_current_role,
+  //           $.keyword_current_user,
+  //           $.keyword_session_user,
+  //         ),
+  //         repeat(
+  //           seq(
+  //             ',',
+  //             choice(
+  //               $.object_reference,
+  //               $.keyword_public,
+  //               $.keyword_current_role,
+  //               $.keyword_current_user,
+  //               $.keyword_session_user,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //     optional(
+  //       seq(
+  //         $.keyword_using,
+  //         $.parenthesized_expression,
+  //       ),
+  //     ),
+  //     optional(
+  //       seq(
+  //         $.keyword_with,
+  //         $.keyword_check,
+  //         $.parenthesized_expression,
+  //       ),
+  //     ),
+  //   ),
+  // ),
 
 };

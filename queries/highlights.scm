@@ -68,13 +68,6 @@
  (keyword_following)
  (keyword_first)
  (keyword_current_timestamp)
- (keyword_immutable)
- (keyword_atomic)
- (keyword_parallel)
- (keyword_leakproof)
- (keyword_safe)
- (keyword_cost)
- (keyword_strict)
 ] @attribute
 
 [
@@ -92,7 +85,6 @@
  (keyword_avro)
  (keyword_jsonfile)
  (keyword_sequencefile)
- (keyword_volatile)
 ] @storageclass
 
 [
@@ -215,13 +207,9 @@
   (keyword_verbose)
   (keyword_truncate)
   (keyword_cache)
-  (keyword_language)
-  (keyword_called)
   (keyword_conflict)
-  (keyword_declare)
   (keyword_filter)
   (keyword_function)
-  (keyword_input)
   (keyword_name)
   (keyword_oid)
   (keyword_oids)
@@ -230,16 +218,9 @@
   (keyword_regnamespace)
   (keyword_regproc)
   (keyword_regtype)
-  (keyword_restricted)
-  (keyword_return)
-  (keyword_returns)
   (keyword_separator)
-  (keyword_setof)
-  (keyword_stable)
-  (keyword_support)
   (keyword_tblproperties)
   (keyword_trigger)
-  (keyword_unsafe)
   (keyword_admin)
   (keyword_connection)
   (keyword_cycle)
@@ -265,14 +246,10 @@
   (keyword_session_user)
   (keyword_valid)
   (keyword_action)
-  (keyword_definer)
-  (keyword_invoker)
   (keyword_enable)
   (keyword_disable)
   (keyword_security)
   (keyword_policy)
-  (keyword_permissive)
-  (keyword_restrictive)
   (keyword_public)
   (keyword_extension)
   (keyword_version)
@@ -298,17 +275,6 @@
   (keyword_snapshot)
   (keyword_characteristics)
   (keyword_off)
-  (keyword_follows)
-  (keyword_precedes)
-  (keyword_each)
-  (keyword_instead)
-  (keyword_of)
-  (keyword_initially)
-  (keyword_old)
-  (keyword_new)
-  (keyword_referencing)
-  (keyword_statement)
-  (keyword_execute)
   (keyword_procedure)
   (keyword_copy)
   (keyword_delimiter)
@@ -426,7 +392,6 @@
   "/"
   "%"
   "^"
-  ":="
   "="
   "<"
   "<="

@@ -30,7 +30,14 @@ parser-generate: $(PARSER) ## Regenerate grammar and parser sources
 test: install ## Run grammar tests against the currently generated parser
 	$(TS) test
 
-parser-build: install ts-version parser-clean parser-generate test $(WASM) ## Generate, test, and build the WASM artifact
+parser-build: install ts-version parser-clean parser-generate $(WASM) ## Generate, test, and build the WASM artifact
+	@printf 'w/optimize:\n'
+	@awk '/^#define (STATE_COUNT|LARGE_STATE_COUNT|SYMBOL_COUNT|ALIAS_COUNT|TOKEN_COUNT) / { print }' $(PARSER)
+	@wasm_bytes=$$(wc -c < $(WASM)); parser_bytes=$$(wc -c < $(PARSER)); \
+		awk -v wasm_bytes="$$wasm_bytes" -v parser_bytes="$$parser_bytes" 'BEGIN { \
+			printf "wasm: %.0fkb\n", wasm_bytes / 1000; \
+			printf "parser.c: %.1fmb\n", parser_bytes / 1000000 \
+		}'
 
 build: parser-build ## Fully rebuild the WASM artifact
 
