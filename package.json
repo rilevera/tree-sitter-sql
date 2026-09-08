@@ -1,6 +1,7 @@
 {
   "name": "@rilevera/tree-sitter-sql",
   "version": "1.0.1",
+  "type": "module",
   "packageManager": "bun@1.3.11",
   "description": "SQL grammar for tree-sitter, distributed as WebAssembly",
   "license": "MIT",

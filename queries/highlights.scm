@@ -22,6 +22,9 @@
 (field
   name: (identifier) @field)
 
+(json_path
+  (identifier) @property)
+
 (term
   alias: (identifier) @variable)
 
@@ -399,6 +402,7 @@
   ">="
   ">"
   "<>"
+  ":"
   (op_other)
   (op_unary_other)
 ] @operator
@@ -406,6 +410,8 @@
 [
   "("
   ")"
+  "["
+  "]"
 ] @punctuation.bracket
 
 [
