@@ -25,6 +25,8 @@ export default grammar({
   conflicts: $ => [
     [$.object_reference, $._qualified_field],
     [$.field, $._qualified_field],
+    // Preserve both parses for `array[lower:upper]`: slice or JSON-access subscript.
+    [$._expression, $.json_access_expression],
     [$._column, $._qualified_field],
     [$.object_reference],
     [$.between_expression, $.binary_expression],
@@ -34,6 +36,7 @@ export default grammar({
 
   precedences: $ => [
     [
+      'json_access',
       'binary_is',
       'unary_not',
       'binary_exp',

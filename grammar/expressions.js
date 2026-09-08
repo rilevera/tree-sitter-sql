@@ -26,7 +26,22 @@ export default {
       $.between_expression,
       $.parenthesized_expression,
       $.object_id,
+      $.json_access_expression,
     )
+  ),
+
+  json_access_expression: $ => prec.left('json_access', seq(
+    field('operand', alias($._qualified_field, $.field)),
+    ':',
+    field('path', $.json_path),
+  )),
+  json_path: $ => prec.right(seq(
+    $._json_path_element,
+    repeat(seq(choice('.', ':'), $._json_path_element)),
+  )),
+  _json_path_element: $ => choice(
+    $.identifier,
+    $._literal_string,
   ),
 
     object_reference: $ => choice(
@@ -186,11 +201,11 @@ export default {
       "[",
       choice(
         field('subscript', $._expression),
-        seq(
-          field('lower', $._expression),
+        prec.dynamic(1, seq(
+          optional(field('lower', $._expression)),
           ':',
-          field('upper', $._expression),
-        ),
+          optional(field('upper', $._expression)),
+        )),
       ),
       "]",
     ),
