@@ -1,6 +1,6 @@
 {
   "name": "@rilevera/tree-sitter-sql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "packageManager": "bun@1.3.11",
   "description": "SQL grammar for tree-sitter, distributed as WebAssembly",
@@ -20,12 +20,14 @@
     "./tree-sitter-sql.wasm": {
       "types": "./tree-sitter-sql.wasm.d.ts",
       "default": "./tree-sitter-sql.wasm"
-    }
+    },
+    "./highlights.scm": "./queries/highlights.scm"
   },
   "files": [
     "tree-sitter-sql.wasm",
     "tree-sitter-sql.wasm.d.ts",
-    "LICENSE"
+    "LICENSE",
+    "queries/highlights.scm"
   ],
   "keywords": [
     "incremental",
