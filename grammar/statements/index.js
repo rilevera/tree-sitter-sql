@@ -4,7 +4,7 @@ import create_rules from "./create.js";
 import alter_rules from "./alter.js";
 import drop_rules from "./drop.js";
 import rename_rules from "./rename.js";
-import optimize_rules from "./optimize.js";
+// import optimize_rules from "./optimize.js";
 import merge_rules from "./merge.js";
 import comment_rules from "./comment.js";
 import delete_rules from "./delete.js";
@@ -78,7 +78,7 @@ export default {
     $._alter_statement,
     $._drop_statement,
     $._rename_statement,
-    $._optimize_statement,
+    // $._optimize_statement,
     $._merge_statement,
     $._refresh_statement,
     $.comment_statement,
@@ -90,7 +90,7 @@ export default {
   ...alter_rules,
   ...drop_rules,
   ...rename_rules,
-  ...optimize_rules,
+  // ...optimize_rules,
   ...merge_rules,
   ...refresh_rules,
   ...comment_rules,

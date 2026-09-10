@@ -1,3 +1,8 @@
+/*
+ * Disabled because these rules target Hive, Impala, Athena/Iceberg, MariaDB,
+ * and VACUUM-style dialects outside the supported Snowflake and Elasticsearch
+ * SQL log-querying scope.
+ *
 import { paren_list } from "../helpers.js";
 
 export default {
@@ -107,3 +112,4 @@ export default {
   ),
 
 };
+*/
