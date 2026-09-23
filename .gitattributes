@@ -4,6 +4,3 @@
 src/*.json linguist-generated
 src/parser.c linguist-generated
 src/tree_sitter/* linguist-generated
-
-# Committed package artifact
-*.wasm binary linguist-generated

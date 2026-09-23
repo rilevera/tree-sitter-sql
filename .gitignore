@@ -6,9 +6,10 @@ node_modules/
 /src/*.json
 /src/tree_sitter/
 
-# Tree-sitter build artifacts other than the committed WASM package
+# Tree-sitter build artifacts (built locally via `make build`, not committed)
 *.obj
 *.o
+/tree-sitter-sql.wasm
 
 # Package archives
 *.tar.gz

@@ -42,12 +42,37 @@ This project uses [Bun](https://bun.sh) and the [tree-sitter CLI](https://github
 to generate the parser, run the corpus tests, and build the WASM artifact.
 
 ```bash
-make install   # validate Bun and install dependencies from the lockfile
-make test      # regenerate the parser and run the grammar tests
-make build     # generate, test, and build tree-sitter-sql.wasm
+make install    # validate Bun and install dependencies from the lockfile
+make test       # regenerate the parser and run the grammar tests
+make test-wasm  # run the corpus tests against tree-sitter-sql.wasm via web-tree-sitter
+make build      # generate, build, and test tree-sitter-sql.wasm
 ```
 
+`make test` runs the corpus tests against a native build produced by the tree-sitter CLI —
+useful for fast feedback while iterating on the grammar. Since the published package ships
+WebAssembly instead, `make build` (and `make publish`) verify the built `tree-sitter-sql.wasm`
+itself by re-running the corpus tests through `web-tree-sitter`, which can behave differently
+from the CLI's native build.
+
 Run `make help` to see all available commands.
+
+`tree-sitter-sql.wasm` is a build artifact — it's gitignored, not committed. Run `make build`
+to generate it locally before publishing or testing against a consumer.
+
+### Testing against a consumer locally
+
+To try a change here in a downstream project (e.g. the language parser) before tagging a
+release:
+
+1. `make build` in this repo to regenerate `tree-sitter-sql.wasm`.
+2. In the consumer's `package.json`, point the dependency at this checkout:
+   `"@rilevera/tree-sitter-sql": "file:../tree-sitter-sql"` (adjust the path), then run its
+   install command.
+3. Re-run `make build` here as you iterate — since the dependency is a symlink, the consumer
+   picks up the change without reinstalling.
+
+Revert the consumer's `package.json`/lockfile to the tagged or registry version once you're
+done testing.
 
 ### Releasing
 
