@@ -47,9 +47,11 @@
   "scripts": {
     "check:bun": "bun run scripts/check-bun-version.ts",
     "build": "make parser-build",
-    "test": "make test"
+    "test": "make test",
+    "test:wasm": "make test-wasm"
   },
   "devDependencies": {
-    "tree-sitter-cli": "0.26.11"
+    "tree-sitter-cli": "0.26.11",
+    "web-tree-sitter": "0.26.11"
   }
 }

@@ -10,7 +10,7 @@ PARSER := $(SRC_DIR)/parser.c
 PARSER_DEPS := $(PARSER) $(wildcard $(SRC_DIR)/scanner.c $(SRC_DIR)/scanner.cc)
 TS := bun run tree-sitter
 
-.PHONY: help install clean build test publish parser-clean parser-generate parser-build ts-version set-version bump-minor bump-patch FORCE
+.PHONY: help install clean build test test-wasm publish parser-clean parser-generate parser-build ts-version set-version bump-minor bump-patch FORCE
 
 help: ## List available commands
 	@awk 'BEGIN {FS = ":.*## "; printf "Usage: make <command>\n\nCommands:\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -30,7 +30,11 @@ parser-generate: $(PARSER) ## Regenerate grammar and parser sources
 test: install ## Run grammar tests against the currently generated parser
 	$(TS) test
 
-parser-build: install ts-version parser-clean parser-generate test $(WASM) ## Generate, test, and build the WASM artifact
+test-wasm: install ## Run corpus tests against the built WASM artifact via web-tree-sitter
+	@test -s $(WASM) || (echo "$(WASM) not found; run 'make build' first" >&2; exit 1)
+	bun run scripts/test-wasm.ts
+
+parser-build: install ts-version parser-clean parser-generate $(WASM) test-wasm ## Generate, build, and test the WASM artifact
 
 build: parser-build ## Fully rebuild the WASM artifact
 
